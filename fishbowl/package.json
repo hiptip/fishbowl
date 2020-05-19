@@ -1,0 +1,17 @@
+{
+  "name": "fishbowl",
+  "version": "1.0.0",
+  "description": "idk some game dana's friend made up",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "connect": "^3.7.0",
+    "ejs": "^3.0.2",
+    "express": "^3.21.2",
+    "socket.io": "^2.3.0"
+  }
+}
