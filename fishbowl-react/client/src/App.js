@@ -1,6 +1,8 @@
 import React from 'react';
+import { Router, Route, Switch } from "react-router";
 import logo from './logo.svg';
 import './App.css';
+import NewSession from './FishBowl/NewSession'
 import { subscribeToTimer } from './api';
 
 
@@ -16,24 +18,11 @@ class App extends React.Component {
     }));
   };
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-          This is the timer value: {this.state.timestamp}
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+    //if new session, render intro
+    if (true) {
+      return <NewSession timestamp={this.state.timestamp}/>;
+    }
+    //else return the game
   }
 }
 
