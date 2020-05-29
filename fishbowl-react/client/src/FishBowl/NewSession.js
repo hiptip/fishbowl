@@ -6,8 +6,11 @@ import { navigate, useRedirect } from "hookrouter";
 class NewSession extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            gameId: ''
+        };
         this.socket = this.props.socket.connect();
-        this.socket.on('newGameCreated', this.gameDeets)
+        this.socket.on('newGameCreated', this.gameDeets);
       }
 
 
@@ -21,7 +24,8 @@ class NewSession extends React.Component {
     }
 
     gameDeets = (data) => {
-        console.log(data)
+        console.log(data);
+        this.setState({ gameId : data.gameId })
     }
 
     render() {
@@ -29,6 +33,9 @@ class NewSession extends React.Component {
             <div className="New-session">
                 <button onClick={this.createNewSession}>Create new game</button>
                 <button onClick={this.joinSession}>Join game</button>
+                <div>
+                    <p>{this.state.gameId}</p>
+                </div>
             </div>
         )
     }
