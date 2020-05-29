@@ -8,6 +8,11 @@ class JoinSession extends React.Component {
         this.gameID = React.createRef();
         this.socket = this.props.socket.connect();
         this.socket.on('error', this.error);
+        //update list of players in room
+        this.socket.on('playerJoinedRoom', this.addPlayerToList)
+        this.state = {
+            playerList : []
+        }
     }
 
 
@@ -20,6 +25,7 @@ class JoinSession extends React.Component {
         // Send the gameId and playerName to the server
         this.props.socket.emit('playerJoinGame', data);
 
+        
         // Set the appropriate properties for the current player.
         // App.myRole = 'Player';
         // App.Player.myName = data.playerName;
@@ -27,6 +33,21 @@ class JoinSession extends React.Component {
 
     error = (data) => {
         alert(data.message);
+    }
+
+    // newGrocery = {
+    //     name: this.state.name
+    //   }
+      
+    //   this.setState(
+    //     { groceries: [...this.state.groceries, newGrocery] }
+    //   )
+
+    addPlayerToList = (data) => {
+        this.setState(
+            { playerList: [...this.state.playerList, data.playerName] }
+        )
+        console.log(this.state.playerList);
     }
 
     render() {
@@ -39,6 +60,13 @@ class JoinSession extends React.Component {
                     <input ref={this.gameID}></input>
                     <button onClick={this.joinGame}>Enter</button>
                 </div>
+                <ul>
+                    {this.state.playerList.map(playerList => (
+                        <li>
+                            {playerList}
+                        </li>
+                    ))}
+                </ul>
             </div>
         )
     }
