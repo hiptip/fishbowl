@@ -2,10 +2,12 @@ import React from 'react';
 import { Router, Route, Switch } from "react-router";
 import logo from './logo.svg';
 import './App.css';
+import SocketContext from './SocketContext'
 import NewSession from './FishBowl/NewSession'
 import { subscribeToTimer } from './api';
+import openSocket from 'socket.io-client'
 
-
+const socket = openSocket('http://localhost:9000');
 
 class App extends React.Component {
   state = {
@@ -20,7 +22,11 @@ class App extends React.Component {
   render() {
     //if new session, render intro
     if (true) {
-      return <NewSession timestamp={this.state.timestamp}/>;
+      return  (
+        <SocketContext.Provider value={socket}>
+          <NewSession timestamp={this.state.timestamp}/>
+        </SocketContext.Provider>
+      )
     }
     //else return the game
   }
