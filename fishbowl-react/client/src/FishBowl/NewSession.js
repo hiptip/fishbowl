@@ -6,6 +6,7 @@ class NewSession extends React.Component {
         super(props);
         this.socket = this.props.socket.connect();
         this.socket.on('newGameCreated', this.gameDeets)
+        this.joinSessionBool = false;
       }
 
 
@@ -14,7 +15,7 @@ class NewSession extends React.Component {
     }
 
     joinSession = () => {
-        
+        this.joinSessionBool = true;
     }
 
     gameDeets = (data) => {
@@ -25,6 +26,7 @@ class NewSession extends React.Component {
         return (
             <div className="New-session">
                 <button onClick={this.createNewSession}>Create new game</button>
+                <button onClick={this.joinSession}>Join game</button>
             </div>
         )
     }
