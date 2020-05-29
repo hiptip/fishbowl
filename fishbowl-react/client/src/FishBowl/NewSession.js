@@ -1,5 +1,7 @@
 import React from 'react';
-import SocketContext from '../SocketContext'
+import SocketContext from '../SocketContext';
+import { navigate, useRedirect } from "hookrouter";
+
 
 class NewSession extends React.Component {
     constructor(props) {
@@ -14,7 +16,8 @@ class NewSession extends React.Component {
     }
 
     joinSession = () => {
-        this.setState({ joinSessionBool : true })
+        navigate('/join');
+        window.location.reload(false);
     }
 
     gameDeets = (data) => {
