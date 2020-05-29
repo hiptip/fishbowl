@@ -1,6 +1,6 @@
 import React from 'react';
 import SocketContext from '../SocketContext';
-import { navigate, useRedirect } from "hookrouter";
+import { navigate } from "hookrouter";
 
 
 class NewSession extends React.Component {

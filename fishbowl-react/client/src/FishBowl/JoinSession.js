@@ -7,7 +7,7 @@ class JoinSession extends React.Component {
         this.playerName = React.createRef();
         this.gameID = React.createRef();
         this.socket = this.props.socket.connect();
-        this.socket.on('error', (error) => {});
+        this.socket.on('error', this.error);
     }
 
 
