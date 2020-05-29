@@ -6,7 +6,6 @@ class NewSession extends React.Component {
         super(props);
         this.socket = this.props.socket.connect();
         this.socket.on('newGameCreated', this.gameDeets)
-        this.joinSessionBool = false;
       }
 
 
@@ -15,7 +14,7 @@ class NewSession extends React.Component {
     }
 
     joinSession = () => {
-        this.joinSessionBool = true;
+        this.setState({ joinSessionBool : true })
     }
 
     gameDeets = (data) => {
