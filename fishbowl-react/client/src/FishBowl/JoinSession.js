@@ -68,10 +68,10 @@ class JoinSession extends React.Component {
     }
 }
 
-const JoinSessionWithSocket = props => (
-    <SocketContext.Consumer>
-    {socket => <JoinSession {...props} socket={socket} />}
-    </SocketContext.Consumer>
-  )
+// const JoinSessionWithSocket = props => (
+//     <SocketContext.Consumer>
+//     {socket => <JoinSession {...props} socket={socket} />}
+//     </SocketContext.Consumer>
+//   )
     
-export default JoinSessionWithSocket
+export default JoinSession

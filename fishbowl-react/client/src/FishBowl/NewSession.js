@@ -1,16 +1,18 @@
 import React from 'react';
 import SocketContext from '../SocketContext';
 import { navigate } from "hookrouter";
+import { Link } from "react-router-dom";
 
 
 class NewSession extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            gameId: ''
-        };
-        this.socket = this.props.socket.connect();
-        this.socket.on('newGameCreated', this.gameDeets);
+        // this.state = {
+        //     gameId: ''
+        // };
+        console.log(this.props.socket);
+        // this.socket = this.props.socket.connect();
+        // this.socket.on('newGameCreated', this.gameDeets);
       }
 
 
@@ -19,22 +21,26 @@ class NewSession extends React.Component {
     }
 
     joinSession = () => {
-        navigate('/join');
-        window.location.reload(false);
+        // navigate('/join');
+        // window.location.reload(false);
+        // return <Redirect to='/join' />
+        // const history = useHistory();
+        // history.push("/join");
+        
     }
 
-    gameDeets = (data) => {
-        console.log(data);
-        this.setState({ gameId : data.gameId })
-    }
+    // gameDeets = (data) => {
+    //     console.log(data);
+    //     this.setState({ gameId : data.gameId })
+    // }
 
     render() {
         return (
             <div className="New-session">
                 <button onClick={this.createNewSession}>Create new game</button>
-                <button onClick={this.joinSession}>Join game</button>
+                <Link to="/join"><button>Join game</button></Link>
                 <div>
-                    <p>{this.state.gameId}</p>
+                    <p>{this.props.state.gameId}</p>
                 </div>
             </div>
         )
@@ -42,11 +48,11 @@ class NewSession extends React.Component {
 
 }
 
-const NewSessionWithSocket = props => (
-    <SocketContext.Consumer>
-    {socket => <NewSession {...props} socket={socket} />}
-    </SocketContext.Consumer>
-  )
+// const NewSessionWithSocket = props => (
+//     <SocketContext.Consumer>
+//     {socket => <NewSession {...props} socket={socket} />}
+//     </SocketContext.Consumer>
+//   )
     
-export default NewSessionWithSocket
+export default NewSession
 
