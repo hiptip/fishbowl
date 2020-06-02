@@ -7,6 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('api:server');
 var http = require('http');
+var fish = require('../fishbowl');
+
 
 /**
  * Get port from environment and store in Express.
@@ -32,10 +34,10 @@ server.on('listening', onListening);
 //instantiate socket 
 var io = require('socket.io').listen(server);
 
-// io.sockets.on('connection', function (socket) {
-//   //console.log('client connected');
-//   fish.initGame(io, socket);
-// });
+io.sockets.on('connection', function (socket) {
+  console.log('client connected');
+  fish.initGame(io, socket);
+});
 
 // var countdown = 1000;
 // setInterval(function() {
@@ -51,14 +53,14 @@ var io = require('socket.io').listen(server);
 // });
 
 
-io.on("connection", (client) => {
-  client.on('subscribeToTimer', (interval) => {
-    console.log('client is subscribing to timer with interval ', interval);
-    setInterval(() => {
-      client.emit('timer', new Date());
-    }, interval);
-  });
-});
+// io.on("connection", (client) => {
+//   client.on('subscribeToTimer', (interval) => {
+//     console.log('client is subscribing to timer with interval ', interval);
+//     setInterval(() => {
+//       client.emit('timer', new Date());
+//     }, interval);
+//   });
+// });
 
 console.log('listening on port ', port);
 

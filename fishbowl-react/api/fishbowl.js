@@ -1,5 +1,6 @@
 var io;
 var gameSocket;
+var playerList;
 
 /**
  * This function is called by index.js to initialize a new game instance.
@@ -13,13 +14,13 @@ exports.initGame = function(sio, socket){
     gameSocket.emit('connected', { message: "You are connected!" });
 
     // Host Events
-    // gameSocket.on('hostCreateNewGame', hostCreateNewGame);
+    gameSocket.on('hostCreateNewGame', hostCreateNewGame);
     // gameSocket.on('hostRoomFull', hostPrepareGame);
     // gameSocket.on('hostCountdownFinished', hostStartGame);
     // gameSocket.on('hostNextRound', hostNextRound);
 
     // // Player Events
-    // gameSocket.on('playerJoinGame', playerJoinGame);
+    gameSocket.on('playerJoinGame', playerJoinGame);
     // gameSocket.on('playerAnswer', playerAnswer);
     // gameSocket.on('playerRestart', playerRestart);
 }
@@ -42,6 +43,11 @@ function hostCreateNewGame() {
 
     // Join the Room and wait for the players
     this.join(thisGameId.toString());
+
+    //create room state
+    var room = gameSocket.adapter.rooms[thisGameId.toString()];
+
+    room.state = { playerList : [], hostId : this.id };
 };
 
 /*
@@ -98,8 +104,10 @@ function playerJoinGame(data) {
     // A reference to the player's Socket.IO socket object
     var sock = this;
 
+    sock.nickname = data.playerName;
+
     // Look up the room ID in the Socket.IO manager object.
-    var room = gameSocket.manager.rooms["/" + data.gameId];
+    var room = gameSocket.adapter.rooms[data.gameId];
 
     // If the room exists...
     if( room != undefined ){
@@ -109,10 +117,30 @@ function playerJoinGame(data) {
         // Join the room
         sock.join(data.gameId);
 
-        //console.log('Player ' + data.playerName + ' joining game: ' + data.gameId );
+        //Add player to state
+        room.state.playerList.push(data.playerName);
+
+
+        // var playerNames = {};
+        // io.sockets.on('connection', function (client) {
+        //     playerNames[client.id] = {socket: client};
+        //     client.on('data', function (somedata) {  
+        //         playerNames[client.id].data = someData; 
+        //     });    
+        //     client.on('disconnect', function() {
+        //         delete playerNames[client.id];
+        //     });
+        // });
+
+        // console.log(io.sockets.in(data.gameId));
 
         // Emit an event notifying the clients that the player has joined the room.
-        io.sockets.in(data.gameId).emit('playerJoinedRoom', data);
+
+        //send player to others in the room
+        sock.broadcast.to(data.gameId).emit('playerJoinedRoom', data.playerName );
+
+        //send all current players in room to current connectee
+        sock.emit('playerJoinedRoom', room.state.playerList);
 
     } else {
         // Otherwise, send an error message back to the player.
