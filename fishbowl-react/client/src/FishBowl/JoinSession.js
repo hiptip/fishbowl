@@ -21,33 +21,29 @@ class JoinSession extends React.Component {
             gameId : this.gameID.current.value,
             playerName : this.playerName.current.value || 'anon'
         };
-        console.log(data);
         // Send the gameId and playerName to the server
         this.props.socket.emit('playerJoinGame', data);
-
         
-        // Set the appropriate properties for the current player.
-        // App.myRole = 'Player';
-        // App.Player.myName = data.playerName;
     }
 
     error = (data) => {
         alert(data.message);
     }
 
-    // newGrocery = {
-    //     name: this.state.name
-    //   }
-      
-    //   this.setState(
-    //     { groceries: [...this.state.groceries, newGrocery] }
-    //   )
 
     addPlayerToList = (data) => {
-        this.setState(
-            { playerList: [...this.state.playerList, data.playerName] }
-        )
-        console.log(this.state.playerList);
+        console.log(data);
+        if (Array.isArray(data)) {
+            this.setState(
+                { playerList: [...this.state.playerList, ...data] }
+            )
+        } else {
+            this.setState(
+                { playerList: [...this.state.playerList, data] }
+            )
+        }
+       
+        // console.log(this.state.playerList);
     }
 
     render() {
@@ -62,7 +58,7 @@ class JoinSession extends React.Component {
                 </div>
                 <ul>
                     {this.state.playerList.map(playerList => (
-                        <li>
+                        <li key={playerList}> 
                             {playerList}
                         </li>
                     ))}
