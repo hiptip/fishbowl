@@ -63,13 +63,7 @@ export default class FishBowlApp extends Component {
            
             <Router>
                 <Switch>
-                    {/* <Route path="/">
-                        <NewSession state={this.state} socket={socket} />
-                    </Route>
-                    <Route path="/join">
-                        <JoinSession state={this.state} socket={socket}/> 
-                    </Route> */}
-                    <Route path="/" render={withRouter((props) => <NewSession {...props} state={this.state} socket={socket} />)} />
+                    <Route exact path="/" render={withRouter((props) => <NewSession {...props} state={this.state} socket={socket} />)} />
                     <Route path="/join" render={withRouter((props) => <JoinSession {...props} state={this.state} socket={socket} />)} />
                 </Switch>
             </Router>
