@@ -1,5 +1,6 @@
 import React from 'react';
-import SocketContext from '../SocketContext'
+import SocketContext from '../SocketContext';
+import { withRouter } from 'react-router-dom'
 
 class JoinSession extends React.Component {
     constructor(props) {
@@ -74,4 +75,4 @@ class JoinSession extends React.Component {
 //     </SocketContext.Consumer>
 //   )
     
-export default JoinSession
+export default withRouter(JoinSession)

@@ -1,7 +1,7 @@
 import React from 'react';
 import SocketContext from '../SocketContext';
 import { navigate } from "hookrouter";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 
 class NewSession extends React.Component {
@@ -38,7 +38,7 @@ class NewSession extends React.Component {
         return (
             <div className="New-session">
                 <button onClick={this.createNewSession}>Create new game</button>
-                <Link to="/join"><button>Join game</button></Link>
+                <button onClick={() => this.props.history.push('/join')}>Join game</button>
                 <div>
                     <p>{this.props.state.gameId}</p>
                 </div>
@@ -54,5 +54,5 @@ class NewSession extends React.Component {
 //     </SocketContext.Consumer>
 //   )
     
-export default NewSession
+export default withRouter(NewSession)
 
