@@ -26,18 +26,6 @@ export default class FishBowlApp extends Component {
         }
     }
 
-    routes = {
-        "/": () => 
-            //   <SocketContext.Provider value={socket}>
-            <NewSession state={this.state} socket={socket} />,
-            //   </SocketContext.Provider>,
-        "/join": () => 
-            //   <SocketContext.Provider value={socket}>
-            <JoinSession state={this.state}/> 
-            //   </SocketContext.Provider>,
-      };
-
-
     componentDidMount = () => {
         this.socket = socket.connect();
         this.socket.on('newGameCreated', this.gameDeets);
@@ -52,6 +40,10 @@ export default class FishBowlApp extends Component {
         // Socket stuff
     }
 
+    setHost = () => {
+        this.setState({ appRole : "Host" });
+    }
+
 
     // State Mods
 
@@ -63,7 +55,7 @@ export default class FishBowlApp extends Component {
            
             <Router>
                 <Switch>
-                    <Route exact path="/" render={withRouter((props) => <NewSession {...props} state={this.state} socket={socket} />)} />
+                    <Route exact path="/" render={withRouter((props) => <NewSession {...props} state={this.state} socket={socket} hostCallback={this.setHost}/>)} />
                     <Route path="/join" render={withRouter((props) => <JoinSession {...props} state={this.state} socket={socket} />)} />
                 </Switch>
             </Router>

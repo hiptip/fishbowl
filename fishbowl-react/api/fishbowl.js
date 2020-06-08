@@ -1,6 +1,8 @@
 var io;
 var gameSocket;
 var playerList;
+const  Card  = require("./models/CardSchema");
+const  connect  = require("./models/dbconnection");
 
 /**
  * This function is called by index.js to initialize a new game instance.
@@ -23,6 +25,11 @@ exports.initGame = function(sio, socket){
     gameSocket.on('playerJoinGame', playerJoinGame);
     // gameSocket.on('playerAnswer', playerAnswer);
     // gameSocket.on('playerRestart', playerRestart);
+
+    let  card  =  new Card({ card: "Penguin on da moon", sender: "Anonymous"});
+    card.save();
+
+    console.log(card);
 }
 
 /* *******************************
