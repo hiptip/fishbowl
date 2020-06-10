@@ -23,10 +23,12 @@ exports.initGame = function(sio, socket){
 
     // // Player Events
     gameSocket.on('playerJoinGame', playerJoinGame);
+
+    gameSocket.on('tossInCard', tossInCard);
     // gameSocket.on('playerAnswer', playerAnswer);
     // gameSocket.on('playerRestart', playerRestart);
 
-    let  card  =  new Card({ card: "Penguin on da moon", sender: "Anonymous"});
+    let  card  =  new Card({ card: "Penguin on da moon", sender: "Anonymous", room: 6969});
     card.save();
 
     console.log(card);
@@ -153,6 +155,16 @@ function playerJoinGame(data) {
         // Otherwise, send an error message back to the player.
         this.emit('error',{message: "This room does not exist."} );
     }
+}
+
+function tossInCard(data) {
+    console.log(data);
+    //add to mongo
+    let  card  =  new Card({ card: data.card, sender: data.sender, room: data.room });
+    card.save();
+
+    console.log(card);
+
 }
 
 /**
