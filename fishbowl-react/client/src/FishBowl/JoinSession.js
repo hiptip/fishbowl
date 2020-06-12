@@ -8,7 +8,7 @@ class JoinSession extends React.Component {
         this.playerName = React.createRef();
         this.gameID = React.createRef();
         this.socket = this.props.socket.connect();
-        this.setPlayerName = this.props.setPlayerName;
+        // this.setPlayerName = this.props.setPlayerName;
         this.socket.on('error', this.error);
         //update list of players in room
         this.socket.on('playerJoinedRoom', this.addPlayerToList)
@@ -22,7 +22,7 @@ class JoinSession extends React.Component {
             gameId : this.gameID.current.value,
             playerName : this.playerName.current.value || 'anon'
         };
-        this.setPlayerName(this.playerName.current.value);
+        this.props.setPlayerName(this.playerName.current.value);
         // Send the gameId and playerName to the server
         this.props.socket.emit('playerJoinGame', data);
         
