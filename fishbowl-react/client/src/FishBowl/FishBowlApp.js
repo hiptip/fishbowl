@@ -25,7 +25,6 @@ export default class FishBowlApp extends Component {
             gameRole: null,
             myTurn: null,
         }
-        this.setPlayerName = this.setPlayerName.bind(this);
     }
 
     componentDidMount = () => {
@@ -42,7 +41,7 @@ export default class FishBowlApp extends Component {
         // Socket stuff
     }
 
-    setPlayerName(name) {
+    setPlayerName = (name) => {
         this.setState({ playerName : name })
     }
 
@@ -61,7 +60,13 @@ export default class FishBowlApp extends Component {
            
             <Router>
                 <Switch>
-                    <Route exact path="/" render={withRouter((props) => <NewSession {...props} state={this.state} socket={socket} hostCallback={this.setHost}/>)} />
+                    <Route exact path="/" render={withRouter((props) => <NewSession {...props} 
+                        state={this.state} 
+                        socket={socket} 
+                        hostCallback={this.setHost}/>)} 
+                        // Functions
+                        setPlayerName={this.setPlayerName}
+                        />
                     <Route path="/join" render={withRouter((props) => <JoinSession {...props} state={this.state} socket={socket} />)} />
                     <Route path="/create" render={withRouter((props) => <CreateCard {...props} state={this.state} socket={socket} />)} />
                 </Switch>
