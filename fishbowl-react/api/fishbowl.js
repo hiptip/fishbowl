@@ -27,11 +27,6 @@ exports.initGame = function(sio, socket){
     gameSocket.on('tossInCard', tossInCard);
     // gameSocket.on('playerAnswer', playerAnswer);
     // gameSocket.on('playerRestart', playerRestart);
-
-    let  card  =  new Card({ card: "Penguin on da moon", sender: "Anonymous", room: 6969});
-    card.save();
-
-    console.log(card);
 }
 
 /* *******************************

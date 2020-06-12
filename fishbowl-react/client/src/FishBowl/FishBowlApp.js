@@ -19,12 +19,13 @@ export default class FishBowlApp extends Component {
         super(props);
         this.state = {
             appRole: null,
-            userId: null,
+            playerName: null,
             gameId: null,
             team: null,
             gameRole: null,
             myTurn: null,
         }
+        this.setPlayerName = this.setPlayerName.bind(this);
     }
 
     componentDidMount = () => {
@@ -39,6 +40,10 @@ export default class FishBowlApp extends Component {
 
     setGame = () => {
         // Socket stuff
+    }
+
+    setPlayerName(name) {
+        this.setState({ playerName : name })
     }
 
     setHost = () => {
