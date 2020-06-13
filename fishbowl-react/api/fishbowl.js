@@ -6,6 +6,11 @@ const  connect  = require("./models/dbconnection");
 // Mongoose models
 import models from './models';
 
+// Utils
+import getNextRoom from './utilities/getNextRoom';
+import getRoom from './utilities/getRoom';
+import updateRoom from './utilities/updateRoom';
+
 /**
  * This function is called by index.js to initialize a new game instance.
  *
@@ -42,29 +47,22 @@ exports.initGame = function(sio, socket){
  */
 async function hostCreateNewGame() {
 
-    // // Create a new game
-    // let gameInit = new models.Game();
-    // let newGame = await gameInit.save();
+    // Get next available room
+    let roomId = await getNextRoom();
 
-    // // Set mongo Id
-    // let mongoId = newGame._id;
-
-    // console.log(newGame);
-    // console.log("MongoId: ", mongoId)
-
-    // Create a unique Socket.IO Room
-    var thisGameId = ( Math.random() * 100000 ) | 0;
+    // Create a game with the room
+    let gameInit = await models.Game.create({roomId: roomId, startTime: new Date()});
 
     // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
-    this.emit('newGameCreated', {gameId: thisGameId, mySocketId: this.id});
+    this.emit('newGameCreated', {gameId: roomId, gameMongoId: gameInit._id, mySocketId: this.id});
 
     // Join the Room and wait for the players
-    this.join(thisGameId.toString());
+    this.join(roomId.toString());
 
     //create room state
-    var room = gameSocket.adapter.rooms[thisGameId.toString()];
+    var room = gameSocket.adapter.rooms[roomId.toString()];
 
-    room.state = { playerList : [], hostId : this.id };
+    room.state = { playerList : [], mongoId: gameInit._id, hostId : this.id };
 };
 
 /*
@@ -115,7 +113,7 @@ function hostNextRound(data) {
  * the gameId entered by the player.
  * @param data Contains data entered via player's input - playerName and gameId.
  */
-function playerJoinGame(data) {
+async function playerJoinGame(data) {
     //console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
 
     // A reference to the player's Socket.IO socket object
@@ -137,6 +135,11 @@ function playerJoinGame(data) {
         //Add player to state
         room.state.playerList.push(data.playerName);
 
+        // Add the player to the mongo game 
+        let newPlayer = {name: data.playerName};
+        let game = await models.Game.findOneAndUpdate({_id: room.state.mongoId}, {'$addToSet': {players: newPlayer}}, {new: true, upsert: true});
+
+        // TODO: Send all players back to everyone, for consistency? 
 
         // var playerNames = {};
         // io.sockets.on('connection', function (client) {

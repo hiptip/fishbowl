@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+mongoose.set('useFindAndModify', false);
 mongoose.Promise  = require("bluebird");
 const  url  =  "mongodb://localhost:27017/fishbowl";
 const  connect  =  mongoose.connect(url, { useNewUrlParser: true  });

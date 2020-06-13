@@ -26,6 +26,12 @@ const  GameScheam  =  new Schema(
 
     // Game type
     gameType: String,
+
+    // Room Id
+    roomId: Number,
+
+    // Start time 
+    startTime: Date,
     
     // Deck of cards
     cards: [CardSchema],
