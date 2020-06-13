@@ -1,8 +1,10 @@
 var io;
 var gameSocket;
 var playerList;
-const  Card  = require("./models/CardSchema");
 const  connect  = require("./models/dbconnection");
+
+// Mongoose models
+import models from './models';
 
 /**
  * This function is called by index.js to initialize a new game instance.
@@ -38,7 +40,18 @@ exports.initGame = function(sio, socket){
 /**
  * The 'START' button was clicked and 'hostCreateNewGame' event occurred.
  */
-function hostCreateNewGame() {
+async function hostCreateNewGame() {
+
+    // // Create a new game
+    // let gameInit = new models.Game();
+    // let newGame = await gameInit.save();
+
+    // // Set mongo Id
+    // let mongoId = newGame._id;
+
+    // console.log(newGame);
+    // console.log("MongoId: ", mongoId)
+
     // Create a unique Socket.IO Room
     var thisGameId = ( Math.random() * 100000 ) | 0;
 
@@ -155,7 +168,7 @@ function playerJoinGame(data) {
 function tossInCard(data) {
     console.log(data);
     //add to mongo
-    let  card  =  new Card({ card: data.card, sender: data.sender, room: data.room });
+    let  card  =  new models.Card({ card: data.card, sender: data.sender, room: data.room });
     card.save();
 
     console.log(card);
