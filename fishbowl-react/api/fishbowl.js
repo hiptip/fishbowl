@@ -169,12 +169,20 @@ async function playerJoinGame(data) {
 }
 
 function tossInCard(data) {
-    console.log(data);
-    //add to mongo
-    let  card  =  new models.Card({ card: data.card, sender: data.sender, room: data.room });
-    card.save();
 
-    console.log(card);
+    // Look up the room ID in the Socket.IO manager object.
+    var room = gameSocket.adapter.rooms[data.gameId];
+
+    // Add the card to the mongo db collection 
+    let newCard = {
+        card: data.card,
+        sender: data.sender
+    }
+    let game = await models.Game.findOneAndUpdate({_id: room.state.mongoId}, {'$addToSet': {cards: newCard}}, {new: true, upsert: true});
+    console.log("New Cards: ", game.cards);
+
+    // TODO: Send cards back out to everyone!
+    // sock.broadcast.to(data.gameId).emit('newCardDeck', game.cards);
 
 }
 
