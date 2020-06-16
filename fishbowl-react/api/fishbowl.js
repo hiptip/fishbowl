@@ -168,7 +168,7 @@ async function playerJoinGame(data) {
     }
 }
 
-function tossInCard(data) {
+async function tossInCard(data) {
 
     // Look up the room ID in the Socket.IO manager object.
     var room = gameSocket.adapter.rooms[data.gameId];
