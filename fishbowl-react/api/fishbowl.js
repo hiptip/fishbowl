@@ -138,29 +138,17 @@ async function playerJoinGame(data) {
         // Add the player to the mongo game 
         let newPlayer = {name: data.playerName};
         let game = await models.Game.findOneAndUpdate({_id: room.state.mongoId}, {'$addToSet': {players: newPlayer}}, {new: true, upsert: true});
+        let players = [];
 
-        // TODO: Send all players back to everyone, for consistency? 
-
-        // var playerNames = {};
-        // io.sockets.on('connection', function (client) {
-        //     playerNames[client.id] = {socket: client};
-        //     client.on('data', function (somedata) {  
-        //         playerNames[client.id].data = someData; 
-        //     });    
-        //     client.on('disconnect', function() {
-        //         delete playerNames[client.id];
-        //     });
-        // });
-
-        // console.log(io.sockets.in(data.gameId));
-
-        // Emit an event notifying the clients that the player has joined the room.
-
+        for (const player of game.players) {
+            players.push(player.name);
+        }
+       
         //send player to others in the room
-        sock.broadcast.to(data.gameId).emit('playerJoinedRoom', data.playerName );
+        sock.broadcast.to(data.gameId).emit('playerJoinedRoom', data.playerName);
 
         //send all current players in room to current connectee
-        sock.emit('playerJoinedRoom', room.state.playerList);
+        sock.emit('playerJoinedRoom', players);
 
     } else {
         // Otherwise, send an error message back to the player.
