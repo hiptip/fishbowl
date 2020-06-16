@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import NewSession from './NewSession';
 import JoinSession from './JoinSession';
 import CreateCard from './CreateCard';
+import Game from './Game';
 // import SocketContext from './SocketContext';
 import openSocket from 'socket.io-client';
 // import { useRoutes } from "hookrouter";
@@ -67,6 +68,7 @@ export default class FishBowlApp extends Component {
                         setPlayerName={this.setPlayerName}
                         />)} />
                     <Route path="/create" render={withRouter((props) => <CreateCard {...props} state={this.state} socket={socket} />)} />
+                    <Route path="/game" render={withRouter((props) => <Game {...props} state={this.state} socket={socket} />)} />
                 </Switch>
             </Router>
            
