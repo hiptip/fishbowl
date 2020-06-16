@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
+import { Card, CardWrapper } from 'react-swipeable-cards';
 
 class CreateCard extends React.Component {
     constructor(props) {
@@ -8,6 +9,7 @@ class CreateCard extends React.Component {
         this.state = {
             count : 1
         }
+        this.data = ['Alexandre', 'Thomas', 'Lucien'];
         // this.playerName = this.props
     }
 
@@ -34,6 +36,11 @@ class CreateCard extends React.Component {
                     <button type="button" onClick={this.tossInCard}>Toss in bowl</button>
                     <p>{this.state.count} / 10</p>
                 </form>
+                <CardWrapper>
+                    <Card>
+                    Hello World!
+                    </Card>
+                </CardWrapper>
             </div>
         )
     }

@@ -9,9 +9,13 @@
     "hookrouter": "^1.2.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-native": "^0.62.2",
+    "react-native-card-stack-swiper": "^1.2.4",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-swipe-card": "^0.1.4",
+    "react-swipeable-cards": "^1.0.6",
     "socket.io-client": "^2.3.0"
   },
   "scripts": {
