@@ -5,18 +5,36 @@ import { Card, CardWrapper } from 'react-swipeable-cards';
 class Game extends React.Component {
     constructor(props) {
         super(props);
-        // this.data = ['Alexandre', 'Thomas', 'Lucien'];
+        this.props.socket.emit('retrieveCards', this.props.state.gameId);
+        this.props.socket.on('cardData', this.cardData);
+        this.state  = {
+            cards: null,
+        }
     }
 
-    renderCards() {
-        let data = [{id: 1, name: "First"},{id: 2, name: "Second"}];
-        return data.map((d) => {
+    // componentDidMount() {
+        
+    // }
+
+    cardData = (data) => {
+        console.log(data);
+        this.setState({
+            cards : data.cards,
+            activeCards : data.activeCards,
+            discardedCards : data.discardedCards
+        })
+    }
+
+    renderCards = () => {
+        let cards = this.state.cards;
+        let activeCards = this.state.activeCards;
+        return activeCards.map((d) => {
           return(
             <Card
-              key={d.id}
+              key={cards[d]._id}
               onSwipe={console.log("hi anna")}
-              data={d}>
-                {d.name}
+              data={cards[d]}>
+                {cards[d].card}
             </Card>
           );
         });
@@ -25,7 +43,7 @@ class Game extends React.Component {
     render() {
         return (
             <CardWrapper>
-                {this.renderCards()}
+                {this.state.cards && this.renderCards()}
             </CardWrapper>
         )
     }

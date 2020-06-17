@@ -25,6 +25,10 @@ class CreateCard extends React.Component {
         
     }
 
+    toGame = () => {
+        this.props.history.push('/game');
+    }
+
     render() {
         return (
             <div>
@@ -34,6 +38,7 @@ class CreateCard extends React.Component {
                     <button type="button" onClick={this.tossInCard}>Toss in bowl</button>
                     <p>{this.state.count} / 10</p>
                 </form>
+                <button onClick={this.toGame}>all set</button>
             </div>
         )
     }

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import history from './history';
 import NewSession from './NewSession';
 import JoinSession from './JoinSession';
 import CreateCard from './CreateCard';
@@ -35,12 +34,7 @@ export default class FishBowlApp extends Component {
     componentDidMount = () => {
         this.socket = socket.connect();
         this.socket.on('newGameCreated', this.gameDeets);
-        this.socket.on('startGame', this.startGame);
-    }
-
-    startGame = (data) => {
-        history.push('/create');
-        //why is this not loading?
+        sessionStorage.setItem("state", this.state);
     }
 
     gameDeets = (data) => {
@@ -73,7 +67,7 @@ export default class FishBowlApp extends Component {
     render = () => {
         return (
            
-            <Router history={history}>
+            <Router>
                 <Switch>
                     <Route exact path="/" render={withRouter((props) => <NewSession {...props} state={this.state} socket={socket} setHost={this.setHost}/>)} />
                     <Route path="/join" render={withRouter((props) => <JoinSession {...props} 

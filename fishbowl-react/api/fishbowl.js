@@ -25,6 +25,7 @@ exports.initGame = function(sio, socket){
     // Host Events
     gameSocket.on('hostCreateNewGame', hostCreateNewGame);
     gameSocket.on('startGame', startGame);
+    gameSocket.on('retrieveCards', retrieveCards);
     // gameSocket.on('hostRoomFull', hostPrepareGame);
     // gameSocket.on('hostCountdownFinished', hostStartGame);
     // gameSocket.on('hostNextRound', hostNextRound);
@@ -148,7 +149,6 @@ async function playerJoinGame(data) {
 }
 
 async function tossInCard(data) {
-    console.log(data);
 
     // Look up the room ID in the Socket.IO manager object.
     var room = gameSocket.adapter.rooms[data.gameId];
@@ -164,6 +164,36 @@ async function tossInCard(data) {
     // TODO: Send cards back out to everyone!
     // sock.broadcast.to(data.gameId).emit('newCardDeck', game.cards);
 
+}
+
+async function retrieveCards(data) {
+    console.log(data);
+    var room = gameSocket.adapter.rooms[data];
+
+    let game = await models.Game.findOne({_id: room.state.mongoId});
+
+    let cards = [];
+
+    for (const card of game.cards) {
+        cards.push(card.card);
+    }
+
+    //create list of indeces
+    let activeCards = Array.from(Array(game.cards.length), (_, index) => index);
+
+    //shuffle indeces 
+    activeCards = activeCards.sort(function (a, b) { return 0.5 - Math.random() })
+
+    let cardData = {
+        cards: game.cards,
+        activeCards: activeCards,
+        discardedCards: [],
+    }
+
+    console.log("Cards: ", cardData);
+
+
+    io.sockets.in(data).emit('cardData', cardData);
 }
 
 /**
