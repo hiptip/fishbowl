@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import history from './history';
 import NewSession from './NewSession';
 import JoinSession from './JoinSession';
 import CreateCard from './CreateCard';
@@ -10,7 +11,7 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    withRouter,
+    withRouter
   } from "react-router-dom";
 
 const socket = openSocket('http://localhost:9000');
@@ -18,6 +19,8 @@ const socket = openSocket('http://localhost:9000');
 export default class FishBowlApp extends Component {
     constructor(props) {
         super(props);
+        // this.socket = socket.connect();
+        // this.socket.on('startGame', this.startGame);
         this.state = {
             appRole: null,
             playerName: null,
@@ -25,7 +28,8 @@ export default class FishBowlApp extends Component {
             team: null,
             gameRole: null,
             myTurn: null,
-        }
+        };
+        
     }
 
     componentDidMount = () => {
@@ -35,7 +39,8 @@ export default class FishBowlApp extends Component {
     }
 
     startGame = (data) => {
-        console.log(data);
+        history.push('/create');
+        //why is this not loading?
     }
 
     gameDeets = (data) => {
@@ -51,6 +56,10 @@ export default class FishBowlApp extends Component {
         this.setState({ playerName : name })
     }
 
+    setGameId = (game) => {
+        this.setState({ gameId : game });
+    }
+
     setHost = () => {
         this.setState({ appRole : "Host" });
     }
@@ -64,13 +73,14 @@ export default class FishBowlApp extends Component {
     render = () => {
         return (
            
-            <Router>
+            <Router history={history}>
                 <Switch>
                     <Route exact path="/" render={withRouter((props) => <NewSession {...props} state={this.state} socket={socket} setHost={this.setHost}/>)} />
                     <Route path="/join" render={withRouter((props) => <JoinSession {...props} 
                         state={this.state} 
                         socket={socket} 
                         setPlayerName={this.setPlayerName}
+                        setGameId={this.setGameId}
                         />)} />
                     <Route path="/create" render={withRouter((props) => <CreateCard {...props} state={this.state} socket={socket} />)} />
                     <Route path="/game" render={withRouter((props) => <Game {...props} state={this.state} socket={socket} />)} />

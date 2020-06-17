@@ -24,6 +24,7 @@ exports.initGame = function(sio, socket){
 
     // Host Events
     gameSocket.on('hostCreateNewGame', hostCreateNewGame);
+    gameSocket.on('startGame', startGame);
     // gameSocket.on('hostRoomFull', hostPrepareGame);
     // gameSocket.on('hostCountdownFinished', hostStartGame);
     // gameSocket.on('hostNextRound', hostNextRound);
@@ -65,27 +66,17 @@ async function hostCreateNewGame() {
     room.state = { playerList : [], mongoId: gameInit._id, hostId : this.id };
 };
 
-/*
- * Two players have joined. Alert the host!
- * @param gameId The game ID / room ID
- */
-function hostPrepareGame(gameId) {
-    var sock = this;
-    var data = {
-        mySocketId : sock.id,
-        gameId : gameId
-    };
-    //console.log("All Players Present. Preparing game...");
-    io.sockets.in(data.gameId).emit('beginNewGame', data);
-}
+
 
 /*
  * The Countdown has finished, and the game begins!
  * @param gameId The game ID / room ID
  */
-function hostStartGame(gameId) {
+function startGame(data) {
     console.log('Game Started.');
-    sendWord(0,gameId);
+    console.log(data);
+    io.sockets.in(data).emit('startGame', "Let's begin");
+
 };
 
 /**

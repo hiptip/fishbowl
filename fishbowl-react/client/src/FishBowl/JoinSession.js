@@ -11,7 +11,8 @@ class JoinSession extends React.Component {
         // this.setPlayerName = this.props.setPlayerName;
         this.socket.on('error', this.error);
         //update list of players in room
-        this.socket.on('playerJoinedRoom', this.addPlayerToList)
+        this.socket.on('playerJoinedRoom', this.addPlayerToList);
+        this.socket.on('startGame', this.startGame)
         this.state = {
             playerList : []
         }
@@ -22,6 +23,7 @@ class JoinSession extends React.Component {
             gameId : this.gameID.current.value,
             playerName : this.playerName.current.value || 'anon'
         };
+        this.props.setGameId(this.gameID.current.value);
         this.props.setPlayerName(this.playerName.current.value);
         // Send the gameId and playerName to the server
         this.props.socket.emit('playerJoinGame', data);
@@ -45,8 +47,12 @@ class JoinSession extends React.Component {
         }
     }
 
-    startGame = () => {
-        this.props.socket.emit('startGame', this.gameID.current.value);
+    hostStartGame = () => {
+        this.props.socket.emit('startGame', this.props.state.gameId);
+    }
+
+    startGame = (data) => {
+        this.props.history.push('/create');
     }
 
     render() {
@@ -67,7 +73,7 @@ class JoinSession extends React.Component {
                     ))}
                 </ul>
                 {this.props.state.appRole === "Host" &&
-                    <button onClick={this.startGame}>Start Game</button>
+                    <button onClick={this.hostStartGame}>Start Game</button>
                 }
             </div>
         )
