@@ -148,6 +148,7 @@ async function playerJoinGame(data) {
 }
 
 async function tossInCard(data) {
+    console.log(data);
 
     // Look up the room ID in the Socket.IO manager object.
     var room = gameSocket.adapter.rooms[data.gameId];
@@ -155,7 +156,7 @@ async function tossInCard(data) {
     // Add the card to the mongo db collection 
     let newCard = {
         card: data.card,
-        sender: data.sender
+        sender: data.playerName
     }
     let game = await models.Game.findOneAndUpdate({_id: room.state.mongoId}, {'$addToSet': {cards: newCard}}, {new: true, upsert: true});
     console.log("New Cards: ", game.cards);

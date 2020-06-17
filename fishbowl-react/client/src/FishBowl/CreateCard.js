@@ -13,9 +13,9 @@ class CreateCard extends React.Component {
 
     tossInCard = () => {
         var data = {
-            sender : "Nick", //update this
+            playerName : this.props.state.playerName, //update this
             card : this.cardContents.current.value,
-            room : 6969 //update this
+            gameId : this.props.state.gameId,
         };
         // Send the gameId and playerName to the server
         this.setState(
