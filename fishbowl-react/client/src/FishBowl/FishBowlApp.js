@@ -31,6 +31,11 @@ export default class FishBowlApp extends Component {
     componentDidMount = () => {
         this.socket = socket.connect();
         this.socket.on('newGameCreated', this.gameDeets);
+        this.socket.on('startGame', this.startGame);
+    }
+
+    startGame = (data) => {
+        console.log(data);
     }
 
     gameDeets = (data) => {
@@ -61,7 +66,7 @@ export default class FishBowlApp extends Component {
            
             <Router>
                 <Switch>
-                    <Route exact path="/" render={withRouter((props) => <NewSession {...props} state={this.state} socket={socket} hostCallback={this.setHost}/>)} />
+                    <Route exact path="/" render={withRouter((props) => <NewSession {...props} state={this.state} socket={socket} setHost={this.setHost}/>)} />
                     <Route path="/join" render={withRouter((props) => <JoinSession {...props} 
                         state={this.state} 
                         socket={socket} 

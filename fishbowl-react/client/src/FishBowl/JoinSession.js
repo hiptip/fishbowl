@@ -34,7 +34,6 @@ class JoinSession extends React.Component {
 
 
     addPlayerToList = (data) => {
-        console.log(data);
         if (Array.isArray(data)) {
             this.setState(
                 { playerList: [...this.state.playerList, ...data] }
@@ -44,8 +43,10 @@ class JoinSession extends React.Component {
                 { playerList: [...this.state.playerList, data] }
             )
         }
-       
-        // console.log(this.state.playerList);
+    }
+
+    startGame = () => {
+        this.props.socket.emit('startGame', this.gameID.current.value);
     }
 
     render() {
@@ -65,6 +66,9 @@ class JoinSession extends React.Component {
                         </li>
                     ))}
                 </ul>
+                {this.props.state.appRole === "Host" &&
+                    <button onClick={this.startGame}>Start Game</button>
+                }
             </div>
         )
     }

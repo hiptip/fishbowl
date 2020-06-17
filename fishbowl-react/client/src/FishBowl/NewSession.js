@@ -18,6 +18,10 @@ class NewSession extends React.Component {
 
     createNewSession = () => {
         this.props.socket.emit('hostCreateNewGame');
+        //set myself as host
+        this.props.setHost();
+        //TODO: go right into join game
+
     }
 
     joinSession = () => {
