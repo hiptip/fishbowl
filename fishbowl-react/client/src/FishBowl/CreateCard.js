@@ -28,6 +28,13 @@ class CreateCard extends React.Component {
             this.props.history.push('/game');
             //set game status to waiting
             this.props.setStatusToWaiting();
+            //tell socket we've entered all our cards
+            let data = {
+                gameId : this.props.state.gameId,
+                playerName : this.props.state.playerName,
+            }
+
+            this.props.socket.emit('playerSubmittedCards', data)
             
         }
         

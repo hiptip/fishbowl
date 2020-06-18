@@ -7,6 +7,7 @@ class Game extends React.Component {
         super(props);
         this.props.socket.emit('retrieveCards', this.props.state.gameId);
         this.props.socket.on('cardData', this.cardData);
+        this.props.socket.on('allPlayersReady', this.allPlayersReady);
         this.state  = {
             cards: null,
         }
@@ -31,6 +32,11 @@ class Game extends React.Component {
             index: index
         }
         this.props.socket.emit('discardCard', data);
+    }
+
+    allPlayersReady = (data) => {
+        console.log(data);
+        this.props.setStatusToReady();
     }
 
     renderCards = () => {

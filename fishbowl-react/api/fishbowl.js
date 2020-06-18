@@ -29,6 +29,7 @@ exports.initGame = function(sio, socket){
     gameSocket.on('discardCard', discardCard);
     gameSocket.on('teamA', teamA);
     gameSocket.on('teamB', teamB);
+    gameSocket.on('playerSubmittedCards', playerSubmittedCards)
     // gameSocket.on('hostRoomFull', hostPrepareGame);
     // gameSocket.on('hostCountdownFinished', hostStartGame);
     // gameSocket.on('hostNextRound', hostNextRound);
@@ -56,7 +57,7 @@ async function hostCreateNewGame() {
     let roomId = await getNextRoom();
 
     // Create a game with the room
-    let gameInit = await models.Game.create({roomId: roomId, startTime: new Date()});
+    let gameInit = await models.Game.create({roomId: roomId, startTime: new Date(), playersReady: 0});
 
     // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
     this.emit('newGameCreated', {gameId: roomId, gameMongoId: gameInit._id, mySocketId: this.id});
@@ -197,7 +198,7 @@ async function retrieveCards(data) {
     let update = await models.Game.findOneAndUpdate({_id: room.state.mongoId}, {'$addToSet': {activeCards: activeCards}}, {new: true, upsert: true});
 
 
-    console.log("Cards: ", update);
+    // console.log("Cards: ", update);
 
 
     io.sockets.in(data).emit('cardData', cardData);
@@ -235,6 +236,22 @@ async function teamB(data) {
     let players = game.players;
     let player = players.find(player => player.name == data.name);
     player.team = "B";
+    game.save();
+}
+
+
+//track which players have submitted all their cards
+async function playerSubmittedCards(data) {
+    var room = gameSocket.adapter.rooms[data.gameId];
+    let game = await models.Game.findOne({_id: room.state.mongoId});
+    game.playersReady += 1;
+    
+    console.log("MEATBALL");
+    console.log(game.playersReady);
+    console.log(game.players.length);
+    if (game.playersReady == game.players.length) {
+        io.sockets.in(data.gameId).emit('allPlayersReady', "LETS GO");
+    }
     game.save();
 }
 

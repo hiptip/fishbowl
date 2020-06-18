@@ -64,6 +64,10 @@ export default class FishBowlApp extends Component {
         this.setState({ waitingStatus : true })
     }
 
+    setStatusToReady = () => {
+        this.setState({ waitingStatus : false })
+    }
+
 
     // State Mods
 
@@ -96,7 +100,8 @@ export default class FishBowlApp extends Component {
                         setStatusToWaiting={this.setStatusToWaiting} />)} />
                     <Route path="/game" render={withRouter((props) => <Game {...props} 
                         state={this.state} 
-                        socket={socket} />)} />
+                        socket={socket}
+                        setStatusToReady={this.setStatusToReady} />)} />
                 </Switch>
             </Router>
            

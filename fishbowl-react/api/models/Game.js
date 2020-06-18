@@ -47,6 +47,8 @@ const  GameScheam  =  new Schema(
     // Discard pile
     discardedCards: [Number],
 
+    playersReady: Number,
+
     // Game specific data
     data: mongoose.SchemaTypes.Mixed,
 
