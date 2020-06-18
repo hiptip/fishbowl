@@ -18,6 +18,8 @@ const PlayerSchema = new Schema ({
 
     team: String,
 
+    socketID: String,
+
     // Game specific player data
     data: mongoose.SchemaTypes.Mixed,    
 
