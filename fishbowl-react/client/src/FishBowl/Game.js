@@ -49,6 +49,11 @@ class Game extends React.Component {
       }
 
     render() {
+        if (this.props.state.waitingStatus) {
+            return (
+                <div>Waiting for other players</div>
+            )
+        }
         return (
             <CardWrapper>
                 {this.state.cards && this.renderCards()}

@@ -222,12 +222,20 @@ async function discardCard(data) {
 
 async function teamA(data) {
     var room = gameSocket.adapter.rooms[data.gameId];
-    let game = await models.Game.findOneAndUpdate({_id: room.state.mongoId, "players.name" : data.name}, {'$set': {"player.team": data.team}}, {new: true, upsert: true});
-    console.log ("Player: ", game);
+    let game = await models.Game.findOne({_id: room.state.mongoId});
+    let players = game.players;
+    let player = players.find(player => player.name == data.name);
+    player.team = "A";
+    game.save();
 }
 
 async function teamB(data) {
-
+    var room = gameSocket.adapter.rooms[data.gameId];
+    let game = await models.Game.findOne({_id: room.state.mongoId});
+    let players = game.players;
+    let player = players.find(player => player.name == data.name);
+    player.team = "B";
+    game.save();
 }
 
 /**

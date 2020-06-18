@@ -16,7 +16,12 @@ class ChooseTeam extends React.Component {
     }
 
     teamB = () => {
-        // this.props.socket.emit('teamB', data);
+        let data = {
+            gameId: this.props.state.gameId,
+            name: this.props.state.playerName,
+            team: "B",
+        }
+        this.props.socket.emit('teamB', data);
     }
 
     render() {

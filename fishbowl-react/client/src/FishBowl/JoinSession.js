@@ -76,7 +76,8 @@ class JoinSession extends React.Component {
                 {this.props.state.appRole === "Host" &&
                     <button onClick={this.hostStartGame}>Start Game</button>
                 }
-                <ChooseTeam socket={this.props.socket} state={this.props.state}/>
+                {/*only show this once joined*/}
+                <ChooseTeam socket={this.props.socket} state={this.props.state}/> 
             </div>
         )
     }

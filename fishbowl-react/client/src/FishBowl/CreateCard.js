@@ -27,6 +27,7 @@ class CreateCard extends React.Component {
             //go to game and wait for other players
             this.props.history.push('/game');
             //set game status to waiting
+            this.props.setStatusToWaiting();
             
         }
         

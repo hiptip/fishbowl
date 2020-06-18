@@ -28,6 +28,7 @@ export default class FishBowlApp extends Component {
             team: null,
             gameRole: null,
             myTurn: null,
+            waitingStatus: null,
         };
         
     }
@@ -59,6 +60,10 @@ export default class FishBowlApp extends Component {
         this.setState({ appRole : "Host" });
     }
 
+    setStatusToWaiting = () => {
+        this.setState({ waitingStatus : true })
+    }
+
 
     // State Mods
 
@@ -85,8 +90,13 @@ export default class FishBowlApp extends Component {
                             /> */}
                         </div>
                     )} />
-                    <Route path="/create" render={withRouter((props) => <CreateCard {...props} state={this.state} socket={socket} />)} />
-                    <Route path="/game" render={withRouter((props) => <Game {...props} state={this.state} socket={socket} />)} />
+                    <Route path="/create" render={withRouter((props) => <CreateCard {...props} 
+                        state={this.state} 
+                        socket={socket}
+                        setStatusToWaiting={this.setStatusToWaiting} />)} />
+                    <Route path="/game" render={withRouter((props) => <Game {...props} 
+                        state={this.state} 
+                        socket={socket} />)} />
                 </Switch>
             </Router>
            
