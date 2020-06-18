@@ -1,5 +1,6 @@
 import React from 'react';
 import SocketContext from '../SocketContext';
+import ChooseTeam from './ChooseTeam';
 import { withRouter } from 'react-router-dom'
 
 class JoinSession extends React.Component {
@@ -75,6 +76,7 @@ class JoinSession extends React.Component {
                 {this.props.state.appRole === "Host" &&
                     <button onClick={this.hostStartGame}>Start Game</button>
                 }
+                <ChooseTeam socket={this.props.socket} state={this.props.state}/>
             </div>
         )
     }

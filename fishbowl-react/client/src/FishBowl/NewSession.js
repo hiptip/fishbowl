@@ -10,7 +10,6 @@ class NewSession extends React.Component {
         // this.state = {
         //     gameId: ''
         // };
-        console.log(this.props.socket);
         // this.socket = this.props.socket.connect();
         // this.socket.on('newGameCreated', this.gameDeets);
       }

@@ -22,6 +22,13 @@ class CreateCard extends React.Component {
             { count : this.state.count + 1 }
         )
         this.props.socket.emit('tossInCard', data);
+
+        if (this.state.count == 10) {
+            //go to game and wait for other players
+            this.props.history.push('/game');
+            //set game status to waiting
+            
+        }
         
     }
 

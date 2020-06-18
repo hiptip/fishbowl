@@ -26,6 +26,9 @@ exports.initGame = function(sio, socket){
     gameSocket.on('hostCreateNewGame', hostCreateNewGame);
     gameSocket.on('startGame', startGame);
     gameSocket.on('retrieveCards', retrieveCards);
+    gameSocket.on('discardCard', discardCard);
+    gameSocket.on('teamA', teamA);
+    gameSocket.on('teamB', teamB);
     // gameSocket.on('hostRoomFull', hostPrepareGame);
     // gameSocket.on('hostCountdownFinished', hostStartGame);
     // gameSocket.on('hostNextRound', hostNextRound);
@@ -190,10 +193,41 @@ async function retrieveCards(data) {
         discardedCards: [],
     }
 
-    console.log("Cards: ", cardData);
+    //add active cards
+    let update = await models.Game.findOneAndUpdate({_id: room.state.mongoId}, {'$addToSet': {activeCards: activeCards}}, {new: true, upsert: true});
+
+
+    console.log("Cards: ", update);
 
 
     io.sockets.in(data).emit('cardData', cardData);
+}
+
+async function discardCard(data) {
+
+    var room = gameSocket.adapter.rooms[data.gameId];
+
+    //add to discardedCards
+    let game = await models.Game.findOneAndUpdate({_id: room.state.mongoId}, {'$addToSet': {discardedCards: data.index}}, {new: true, upsert: true});
+
+    console.log ("Added to discard pile", game);
+
+    //remove from activeCards
+}
+
+
+////////////////////////
+// PLAYER CHOOSE TEAM //
+////////////////////////
+
+async function teamA(data) {
+    var room = gameSocket.adapter.rooms[data.gameId];
+    let game = await models.Game.findOneAndUpdate({_id: room.state.mongoId, "players.name" : data.name}, {'$set': {"player.team": data.team}}, {new: true, upsert: true});
+    console.log ("Player: ", game);
+}
+
+async function teamB(data) {
+
 }
 
 /**

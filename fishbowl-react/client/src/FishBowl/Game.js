@@ -25,6 +25,14 @@ class Game extends React.Component {
         })
     }
 
+    discardCard = (index) => {
+        let data = {
+            gameId: this.props.state.gameId,
+            index: index
+        }
+        this.props.socket.emit('discardCard', data);
+    }
+
     renderCards = () => {
         let cards = this.state.cards;
         let activeCards = this.state.activeCards;
@@ -32,7 +40,7 @@ class Game extends React.Component {
           return(
             <Card
               key={cards[d]._id}
-              onSwipe={console.log("hi anna")}
+              onSwipeLeft={this.discardCard(d)}
               data={cards[d]}>
                 {cards[d].card}
             </Card>

@@ -16,6 +16,8 @@ const PlayerSchema = new Schema ({
     // Player name
     name: {type: String},
 
+    team: String,
+
     // Game specific player data
     data: mongoose.SchemaTypes.Mixed,    
 
