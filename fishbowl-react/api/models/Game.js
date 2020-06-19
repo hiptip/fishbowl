@@ -51,6 +51,16 @@ const  GameScheam  =  new Schema(
 
     playersReady: Number,
 
+    teamA: [PlayerSchema],
+
+    teamB: [PlayerSchema],
+
+    teamTurn: String,
+
+    teamAIndex: Number,
+
+    teamBIndex: Number,
+
     // Game specific data
     data: mongoose.SchemaTypes.Mixed,
 

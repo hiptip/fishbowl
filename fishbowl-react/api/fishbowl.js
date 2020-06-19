@@ -57,7 +57,7 @@ async function hostCreateNewGame() {
     let roomId = await getNextRoom();
 
     // Create a game with the room
-    let gameInit = await models.Game.create({roomId: roomId, startTime: new Date(), playersReady: 0});
+    let gameInit = await models.Game.create({roomId: roomId, startTime: new Date(), playersReady: 0, teamAIndex: 0, teamBIndex: 0, teamTurn: "A"});
 
     // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
     this.emit('newGameCreated', {gameId: roomId, gameMongoId: gameInit._id, mySocketId: this.id});
@@ -73,10 +73,7 @@ async function hostCreateNewGame() {
 
 
 
-/*
- * The Countdown has finished, and the game begins!
- * @param gameId The game ID / room ID
- */
+//go to card creation screen and set turn
 function startGame(data) {
     console.log('Game Started.');
     console.log(data);
@@ -226,8 +223,12 @@ async function teamA(data) {
     let game = await models.Game.findOne({_id: room.state.mongoId});
     let players = game.players;
     let player = players.find(player => player.name == data.name);
-    player.team = "A";
-    game.save();
+    let teamA = await models.Game.findOneAndUpdate({_id: room.state.mongoId}, {'$addToSet': {teamA: player}}, {new: true, upsert: true});
+
+
+    // player.team = "A";
+    teamA.save();
+
 }
 
 async function teamB(data) {
@@ -235,8 +236,9 @@ async function teamB(data) {
     let game = await models.Game.findOne({_id: room.state.mongoId});
     let players = game.players;
     let player = players.find(player => player.name == data.name);
-    player.team = "B";
-    game.save();
+    let teamB = await models.Game.findOneAndUpdate({_id: room.state.mongoId}, {'$addToSet': {teamB: player}}, {new: true, upsert: true});
+    // player.team = "B";
+    teamB.save();
 }
 
 
@@ -250,12 +252,12 @@ async function playerSubmittedCards(data) {
     console.log(game.playersReady);
     console.log(game.players.length);
     if (game.playersReady == game.players.length) {
-        //TODO: randomly choose one socket in room to be the first presenter
-        let sockets = io.sockets.in(data.gameId);
-        let index = Math.floor(Math.random() * sockets.length) + 1  ;
-        let firstSocket = sockets[index];
+        choosePresenter(game, data);
+        //TODO: randomly choose one socket in room to be the first presenter from team A
+        // let players = game.players;
 
-        io.sockets.in(data.gameId).emit('allPlayersReady', "LETS GO");
+
+        // io.sockets.in(data.gameId).emit('allPlayersReady', "LETS GO");
     }
     game.save();
 }
@@ -266,6 +268,25 @@ async function playerSubmittedCards(data) {
    *                       *
    ************************* */
 
+
+function choosePresenter(game, data) {
+    io.sockets.in(data.gameId).emit('allPlayersReady', "LETS GO");
+    let teamTurn = game.teamTurn;
+    switch (teamTurn) {
+        case "A": 
+            let player = game.teamA[game.teamAIndex % game.teamA.length];
+            io.to(player.socketID).emit('myTurn', 'ITs ur turn fool');
+            game.teamAIndex += 1;
+            game.teamTurn = "B";
+            game.save;
+        case "B":
+            let player = game.teamB[game.teamBIndex % game.teamB.length];
+            io.to(player.socketID).emit('myTurn', 'ITs ur turn fool');
+            game.teamBIndex += 1;
+            game.teamTurn = "A";
+            game.save;
+    }
+}
 
 // function getTeams(game) {
 
