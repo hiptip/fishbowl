@@ -252,12 +252,12 @@ async function playerSubmittedCards(data) {
     console.log(game.playersReady);
     console.log(game.players.length);
     if (game.playersReady == game.players.length) {
-        choosePresenter(game, data);
+        // choosePresenter(game, data);
         //TODO: randomly choose one socket in room to be the first presenter from team A
         // let players = game.players;
 
 
-        // io.sockets.in(data.gameId).emit('allPlayersReady', "LETS GO");
+        io.sockets.in(data.gameId).emit('allPlayersReady', "LETS GO");
     }
     game.save();
 }
@@ -269,7 +269,9 @@ async function playerSubmittedCards(data) {
    ************************* */
 
 
-function choosePresenter(game, data) {
+function choosePresenter(data) {
+    var room = gameSocket.adapter.rooms[data.gameId];
+    let game = await models.Game.findOne({_id: room.state.mongoId});
     io.sockets.in(data.gameId).emit('allPlayersReady', "LETS GO");
     let teamTurn = game.teamTurn;
     switch (teamTurn) {
