@@ -31,6 +31,7 @@ exports.initGame = function(sio, socket){
     gameSocket.on('teamB', teamB);
     gameSocket.on('playerSubmittedCards', playerSubmittedCards)
     gameSocket.on('choosePresenter', choosePresenter);
+    gameSocket.on('startTimer', startTimer)
     // gameSocket.on('hostRoomFull', hostPrepareGame);
     // gameSocket.on('hostCountdownFinished', hostStartGame);
     // gameSocket.on('hostNextRound', hostNextRound);
@@ -226,7 +227,6 @@ async function teamA(data) {
     let player = players.find(player => player.name == data.name);
     let teamA = await models.Game.findOneAndUpdate({_id: room.state.mongoId}, {'$addToSet': {teamA: player}}, {new: true, upsert: true});
 
-
     // player.team = "A";
     teamA.save();
 
@@ -248,10 +248,6 @@ async function playerSubmittedCards(data) {
     var room = gameSocket.adapter.rooms[data.gameId];
     let game = await models.Game.findOne({_id: room.state.mongoId});
     game.playersReady += 1;
-    
-    console.log("MEATBALL");
-    console.log(game.playersReady);
-    console.log(game.players.length);
     if (game.playersReady == game.players.length) {
         // choosePresenter(game, data);
         //TODO: randomly choose one socket in room to be the first presenter from team A
@@ -294,8 +290,16 @@ async function choosePresenter(data) {
 }
 
 //TODO: timer
-function timer(data) {
-
+function startTimer(data) {
+    // var room = gameSocket.adapter.rooms[data.gameId];
+    var timeleft = 45;
+    var timer = setInterval(function(){
+        if(timeleft <= 0){
+            clearInterval(timer);
+        }
+        io.sockets.in(data.gameId).emit('timeRemaining', timeleft);
+        timeleft -= 1;
+    }, 1000);
 }
 
 // function getTeams(game) {

@@ -9,6 +9,7 @@ class Game extends React.Component {
         this.props.socket.on('cardData', this.cardData);
         this.props.socket.on('allPlayersReady', this.allPlayersReady);
         this.props.socket.on('myTurn', this.setTurn);
+        this.props.socket.on('timeRemaining', this.timeRemaining);
         this.state  = {
             cards: null,
         }
@@ -25,6 +26,10 @@ class Game extends React.Component {
             activeCards : data.activeCards,
             discardedCards : data.discardedCards
         })
+    }
+
+    onSwipe(data) {
+        console.log("wee weooooo");
     }
 
     discardCard = (index) => {
@@ -44,14 +49,40 @@ class Game extends React.Component {
         this.props.setTurn();
     }
 
+    startTimer = () => {
+        console.log("starting timer");
+        let data = {
+            gameId: this.props.state.gameId,
+        }
+        this.props.socket.emit('startTimer', data);
+    }
+
+    timeRemaining = (data) => {
+        console.log(data);
+    } 
+
     renderCards = () => {
         let cards = this.state.cards;
         let activeCards = this.state.activeCards;
+        let firstCard = true;
         return activeCards.map((d) => {
+            if (firstCard) {
+                firstCard = false;
+                return(
+                    <Card
+                      key={1}
+                      onSwipe={this.startTimer.bind(this)}
+                    //   onSwipeLeft={this.discardCard.bind(this)}
+                      data={"YES"}>
+                        {"First Card"}
+                    </Card>
+                  )
+            }
           return(
             <Card
               key={cards[d]._id}
-              onSwipeLeft={this.discardCard(d)}
+              onSwipe={this.onSwipe.bind(this)}
+            //   onSwipeLeft={this.discardCard.bind(this)}
               data={cards[d]}>
                 {cards[d].card}
             </Card>
