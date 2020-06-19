@@ -30,6 +30,7 @@ exports.initGame = function(sio, socket){
     gameSocket.on('teamA', teamA);
     gameSocket.on('teamB', teamB);
     gameSocket.on('playerSubmittedCards', playerSubmittedCards)
+    gameSocket.on('choosePresenter', choosePresenter);
     // gameSocket.on('hostRoomFull', hostPrepareGame);
     // gameSocket.on('hostCountdownFinished', hostStartGame);
     // gameSocket.on('hostNextRound', hostNextRound);
@@ -258,6 +259,7 @@ async function playerSubmittedCards(data) {
 
 
         io.sockets.in(data.gameId).emit('allPlayersReady', "LETS GO");
+        choosePresenter(data);
     }
     game.save();
 }
@@ -269,25 +271,31 @@ async function playerSubmittedCards(data) {
    ************************* */
 
 
-function choosePresenter(data) {
+ //turn logic -- fire after presenter completes their turn  
+async function choosePresenter(data) {
     var room = gameSocket.adapter.rooms[data.gameId];
     let game = await models.Game.findOne({_id: room.state.mongoId});
-    io.sockets.in(data.gameId).emit('allPlayersReady', "LETS GO");
     let teamTurn = game.teamTurn;
     switch (teamTurn) {
         case "A": 
             var player = game.teamA[game.teamAIndex % game.teamA.length];
+            console.log("should be doin something here");
             io.to(player.socketID).emit('myTurn', 'ITs ur turn fool');
             game.teamAIndex += 1;
             game.teamTurn = "B";
-            game.save;
+            game.save();
         case "B":
             var player = game.teamB[game.teamBIndex % game.teamB.length];
             io.to(player.socketID).emit('myTurn', 'ITs ur turn fool');
             game.teamBIndex += 1;
             game.teamTurn = "A";
-            game.save;
+            game.save();
     }
+}
+
+//TODO: timer
+function timer(data) {
+
 }
 
 // function getTeams(game) {

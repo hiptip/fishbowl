@@ -27,7 +27,7 @@ export default class FishBowlApp extends Component {
             gameId: null,
             team: null,
             gameRole: null,
-            myTurn: null,
+            myTurn: false,
             waitingStatus: null,
         };
         
@@ -68,6 +68,10 @@ export default class FishBowlApp extends Component {
         this.setState({ waitingStatus : false })
     }
 
+    setTurn = () => {
+        this.setState({ myTurn : true })
+    }
+
 
     // State Mods
 
@@ -101,7 +105,8 @@ export default class FishBowlApp extends Component {
                     <Route path="/game" render={withRouter((props) => <Game {...props} 
                         state={this.state} 
                         socket={socket}
-                        setStatusToReady={this.setStatusToReady} />)} />
+                        setStatusToReady={this.setStatusToReady}
+                        setTurn={this.setTurn} />)} />
                 </Switch>
             </Router>
            

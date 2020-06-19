@@ -8,6 +8,7 @@ class Game extends React.Component {
         this.props.socket.emit('retrieveCards', this.props.state.gameId);
         this.props.socket.on('cardData', this.cardData);
         this.props.socket.on('allPlayersReady', this.allPlayersReady);
+        this.props.socket.on('myTurn', this.setTurn);
         this.state  = {
             cards: null,
         }
@@ -34,9 +35,13 @@ class Game extends React.Component {
         this.props.socket.emit('discardCard', data);
     }
 
-    allPlayersReady = (data) => {
-        console.log(data);
+    allPlayersReady = () => {
         this.props.setStatusToReady();
+    }
+
+    setTurn = () => {
+        console.log("here???");
+        this.props.setTurn();
     }
 
     renderCards = () => {
@@ -58,6 +63,11 @@ class Game extends React.Component {
         if (this.props.state.waitingStatus) {
             return (
                 <div>Waiting for other players</div>
+            )
+        } else if (!this.props.state.myTurn) {
+            //its my turn
+            return (
+                <div>itss someseonwe gelsesasg aturn</div>
             )
         }
         return (
