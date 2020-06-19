@@ -12,6 +12,7 @@ class Game extends React.Component {
         this.props.socket.on('timeRemaining', this.timeRemaining);
         this.state  = {
             cards: null,
+            timeleft: null,
         }
     }
 
@@ -59,7 +60,9 @@ class Game extends React.Component {
 
     timeRemaining = (data) => {
         console.log(data);
+        this.setState({ timeleft : data });
     } 
+
 
     renderCards = () => {
         let cards = this.state.cards;
@@ -102,9 +105,12 @@ class Game extends React.Component {
             )
         }
         return (
-            <CardWrapper>
-                {this.state.cards && this.renderCards()}
-            </CardWrapper>
+            <div>
+                <CardWrapper>
+                    {this.state.cards && this.renderCards()}
+                </CardWrapper>
+                <p>{this.state.timeleft}</p>
+            </div> 
         )
     }
 }

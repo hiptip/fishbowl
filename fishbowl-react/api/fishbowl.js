@@ -279,23 +279,23 @@ async function choosePresenter(data) {
             io.to(player.socketID).emit('myTurn', 'ITs ur turn fool');
             game.teamAIndex += 1;
             game.teamTurn = "B";
-            game.save();
+            return game.save();
         case "B":
             var player = game.teamB[game.teamBIndex % game.teamB.length];
             io.to(player.socketID).emit('myTurn', 'ITs ur turn fool');
             game.teamBIndex += 1;
             game.teamTurn = "A";
-            game.save();
+            return game.save();
     }
 }
 
 //TODO: timer
 function startTimer(data) {
-    // var room = gameSocket.adapter.rooms[data.gameId];
     var timeleft = 45;
     var timer = setInterval(function(){
         if(timeleft <= 0){
             clearInterval(timer);
+            choosePresenter(data);
         }
         io.sockets.in(data.gameId).emit('timeRemaining', timeleft);
         timeleft -= 1;
