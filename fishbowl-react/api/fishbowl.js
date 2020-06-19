@@ -274,13 +274,13 @@ function choosePresenter(game, data) {
     let teamTurn = game.teamTurn;
     switch (teamTurn) {
         case "A": 
-            let player = game.teamA[game.teamAIndex % game.teamA.length];
+            var player = game.teamA[game.teamAIndex % game.teamA.length];
             io.to(player.socketID).emit('myTurn', 'ITs ur turn fool');
             game.teamAIndex += 1;
             game.teamTurn = "B";
             game.save;
         case "B":
-            let player = game.teamB[game.teamBIndex % game.teamB.length];
+            var player = game.teamB[game.teamBIndex % game.teamB.length];
             io.to(player.socketID).emit('myTurn', 'ITs ur turn fool');
             game.teamBIndex += 1;
             game.teamTurn = "A";
