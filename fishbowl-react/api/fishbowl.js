@@ -59,7 +59,7 @@ async function hostCreateNewGame() {
     let roomId = await getNextRoom();
 
     // Create a game with the room
-    let gameInit = await models.Game.create({roomId: roomId, startTime: new Date(), playersReady: 0, teamAIndex: 0, teamBIndex: 0, teamTurn: "A"});
+    let gameInit = await models.Game.create({roomId: roomId, startTime: new Date(), discardedCards: [], playersReady: 0, teamAIndex: 0, teamBIndex: 0, teamTurn: "A"});
 
     // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
     this.emit('newGameCreated', {gameId: roomId, gameMongoId: gameInit._id, mySocketId: this.id});
@@ -170,7 +170,6 @@ async function tossInCard(data) {
 }
 
 async function retrieveCards(data) {
-    console.log(data);
     var room = gameSocket.adapter.rooms[data];
 
     let game = await models.Game.findOne({_id: room.state.mongoId});
@@ -187,16 +186,19 @@ async function retrieveCards(data) {
     //shuffle indeces 
     activeCards = activeCards.sort(function (a, b) { return 0.5 - Math.random() })
 
+    //active cards is this list minus the ones in discarded pile
+    activeCards = activeCards.filter(val => !game.discardedCards.includes(val));
+
     let cardData = {
         cards: game.cards,
         activeCards: activeCards,
-        discardedCards: [],
+        discardedCards: game.discardedCards,
     }
 
     //add active cards
     let update = await models.Game.findOneAndUpdate({_id: room.state.mongoId}, {'$addToSet': {activeCards: activeCards}}, {new: true, upsert: true});
 
-
+    update.save();
     // console.log("Cards: ", update);
 
     io.sockets.in(data).emit('cardData', cardData);

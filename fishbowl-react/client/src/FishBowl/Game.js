@@ -33,7 +33,7 @@ class Game extends React.Component {
         console.log("wee weooooo");
     }
 
-    discardCard = (index) => {
+    discardCard(index) {
         let data = {
             gameId: this.props.state.gameId,
             index: index
@@ -45,9 +45,9 @@ class Game extends React.Component {
         this.props.setStatusToReady();
     }
 
-    setTurn = () => {
+    setTurn = (bool) => {
         console.log("here???");
-        this.props.setTurn();
+        this.props.setTurn(bool);
     }
 
     startTimer = () => {
@@ -85,7 +85,7 @@ class Game extends React.Component {
             <Card
               key={cards[d]._id}
               onSwipe={this.onSwipe.bind(this)}
-            //   onSwipeLeft={this.discardCard.bind(this)}
+              onSwipeLeft={this.discardCard.bind(this, d)}
               data={cards[d]}>
                 {cards[d].card}
             </Card>
