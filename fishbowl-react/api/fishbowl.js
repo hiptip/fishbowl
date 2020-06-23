@@ -199,7 +199,6 @@ async function retrieveCards(data) {
 
     // console.log("Cards: ", update);
 
-
     io.sockets.in(data).emit('cardData', cardData);
 }
 

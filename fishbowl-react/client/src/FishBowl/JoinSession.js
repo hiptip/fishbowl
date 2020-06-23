@@ -8,15 +8,21 @@ class JoinSession extends React.Component {
         super(props);
         this.playerName = React.createRef();
         this.gameID = React.createRef();
+        
+        this.state = {
+            playerList : []
+        }
+    }
+
+    componentDidMount = () => {
+
         this.socket = this.props.socket.connect();
         // this.setPlayerName = this.props.setPlayerName;
         this.socket.on('error', this.error);
         //update list of players in room
         this.socket.on('playerJoinedRoom', this.addPlayerToList);
         this.socket.on('startGame', this.startGame)
-        this.state = {
-            playerList : []
-        }
+
     }
 
     joinGame = () => {

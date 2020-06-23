@@ -102,7 +102,7 @@ export default class FishBowlApp extends Component {
                         state={this.state} 
                         socket={socket}
                         setStatusToWaiting={this.setStatusToWaiting} />)} />
-                    <Route path="/game" render={withRouter((props) => <Game {...props} 
+                    <Route exact path="/game" render ={withRouter((props) => <Game {...props} 
                         state={this.state} 
                         socket={socket}
                         setStatusToReady={this.setStatusToReady}

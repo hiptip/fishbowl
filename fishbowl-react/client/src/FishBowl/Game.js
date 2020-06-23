@@ -5,20 +5,20 @@ import { Card, CardWrapper } from 'react-swipeable-cards';
 class Game extends React.Component {
     constructor(props) {
         super(props);
-        this.props.socket.emit('retrieveCards', this.props.state.gameId);
-        this.props.socket.on('cardData', this.cardData);
-        this.props.socket.on('allPlayersReady', this.allPlayersReady);
-        this.props.socket.on('myTurn', this.setTurn);
-        this.props.socket.on('timeRemaining', this.timeRemaining);
+
         this.state  = {
             cards: null,
             timeleft: null,
         }
     }
 
-    // componentDidMount() {
-        
-    // }
+    componentDidMount() {
+        this.props.socket.emit('retrieveCards', this.props.state.gameId );
+        this.props.socket.on('cardData', async (data) => { await  this.cardData(data) });
+        this.props.socket.on('allPlayersReady', async () => { await  this.allPlayersReady()});
+        this.props.socket.on('myTurn', async () => { await  this.setTurn()});
+        this.props.socket.on('timeRemaining', async (data) => { await  this.timeRemaining(data)});
+    }
 
     cardData = (data) => {
         console.log(data);
