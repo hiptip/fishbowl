@@ -25,13 +25,14 @@ export default class FishBowlApp extends Component {
             appRole: null,
             playerName: null,
             gameId: null,
+            socketID: null,
             team: null,
             gameRole: null,
             myTurn: false,
             waitingStatus: null,
         };
         
-    }
+    }s
 
     componentDidMount = () => {
         this.socket = socket.connect();
@@ -41,7 +42,7 @@ export default class FishBowlApp extends Component {
 
     gameDeets = (data) => {
         console.log(data);
-        this.setState({ gameId : data.gameId })
+        this.setState({ gameId : data.gameId, socketID : data.mySocketId })
     }
 
     setGame = () => {
@@ -91,6 +92,7 @@ export default class FishBowlApp extends Component {
                                 socket={socket} 
                                 setPlayerName={this.setPlayerName}
                                 setGameId={this.setGameId}
+                                setSocketID={this.setSocketID}
                             />
                             {/* <ChooseTeam {...props}
                                 state={this.state} 
