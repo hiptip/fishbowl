@@ -9,15 +9,17 @@ class Game extends React.Component {
         this.state  = {
             cards: null,
             timeleft: null,
+            activeCards : null,
+            discardedCards : null
         }
     }
 
     componentDidMount() {
         this.props.socket.emit('retrieveCards', this.props.state.gameId );
-        this.props.socket.on('cardData', async (data) => { await  this.cardData(data) });
-        this.props.socket.on('allPlayersReady', async () => { await  this.allPlayersReady()});
-        this.props.socket.on('myTurn', async () => { await  this.setTurn()});
-        this.props.socket.on('timeRemaining', async (data) => { await  this.timeRemaining(data)});
+        this.props.socket.on('cardData', this.cardData);
+        this.props.socket.on('allPlayersReady', this.allPlayersReady);
+        this.props.socket.on('myTurn', this.setTurn);
+        this.props.socket.on('timeRemaining', this.timeRemaining);
     }
 
     cardData = (data) => {
@@ -61,12 +63,15 @@ class Game extends React.Component {
     timeRemaining = (data) => {
         console.log(data);
         this.setState({ timeleft : data });
+        if (data <= 0 && this.props.state.myTurn) {
+            this.setTurn(false);
+        }
     } 
 
 
     renderCards = () => {
         let cards = this.state.cards;
-        let activeCards = this.state.activeCards;
+        let activeCards = [this.state.activeCards[0], ...this.state.activeCards];
         let firstCard = true;
         return activeCards.map((d) => {
             if (firstCard) {
