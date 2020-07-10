@@ -31,6 +31,7 @@ exports.initGame = function(sio, socket){
     gameSocket.on('teamB', teamB);
     gameSocket.on('playerSubmittedCards', playerSubmittedCards)
     gameSocket.on('choosePresenter', choosePresenter);
+    gameSocket.on('addToScore', addToScore);
     gameSocket.on('startTimer', startTimer)
     // gameSocket.on('hostRoomFull', hostPrepareGame);
     // gameSocket.on('hostCountdownFinished', hostStartGame);
@@ -59,7 +60,7 @@ async function hostCreateNewGame() {
     let roomId = await getNextRoom();
 
     // Create a game with the room
-    let gameInit = await models.Game.create({roomId: roomId, startTime: new Date(), discardedCards: [], playersReady: 0, teamAIndex: 0, teamBIndex: 0, teamTurn: "A"});
+    let gameInit = await models.Game.create({roomId: roomId, startTime: new Date(), discardedCards: [], playersReady: 0, teamAIndex: 0, teamBIndex: 0, teamTurn: "A", score: 0, round: 1});
 
     // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
     this.emit('newGameCreated', {gameId: roomId, gameMongoId: gameInit._id, mySocketId: this.id});
@@ -277,22 +278,32 @@ async function choosePresenter(data) {
         case "A": 
             var player = game.teamA[game.teamAIndex % game.teamA.length];
             console.log("should be doin something here");
-            io.to(player.socketID).emit('myTurn', 'ITs ur turn fool');
+            io.to(player.socketID).emit('myTurn', true);
             game.teamAIndex += 1;
             game.teamTurn = "B";
             return game.save();
         case "B":
             var player = game.teamB[game.teamBIndex % game.teamB.length];
-            io.to(player.socketID).emit('myTurn', 'ITs ur turn fool');
+            io.to(player.socketID).emit('myTurn', true);
             game.teamBIndex += 1;
             game.teamTurn = "A";
             return game.save();
     }
 }
 
+//Score logic
+async function addToScore(data) {
+    var room = gameSocket.adapter.rooms[data.gameId];
+    let game = await models.Game.findOne({_id: room.state.mongoId});
+    game.score += 1;
+    io.sockets.in(data.gameId).emit('retrieveScore', game.score);
+    return game.save();
+}
+
+
 //TODO: timer
 function startTimer(data) {
-    var timeleft = 45;
+    var timeleft = 10;
     var timer = setInterval(function(){
         if(timeleft <= 0){
             clearInterval(timer);

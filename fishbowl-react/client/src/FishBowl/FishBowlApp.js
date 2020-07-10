@@ -30,9 +30,11 @@ export default class FishBowlApp extends Component {
             gameRole: null,
             myTurn: false,
             waitingStatus: null,
+            score: null,
+            round: null,
         };
         
-    }s
+    }
 
     componentDidMount = () => {
         this.socket = socket.connect();
@@ -69,10 +71,13 @@ export default class FishBowlApp extends Component {
         this.setState({ waitingStatus : false })
     }
 
-    setTurn = () => {
-        this.setState({ myTurn : true })
+    setTurn = (bool) => {
+        this.setState({ myTurn : bool })
     }
 
+    setScore = (s) => {
+        this.setState({ score : s })
+    }
 
     // State Mods
 
@@ -104,11 +109,12 @@ export default class FishBowlApp extends Component {
                         state={this.state} 
                         socket={socket}
                         setStatusToWaiting={this.setStatusToWaiting} />)} />
-                    <Route exact path="/game" render ={withRouter((props) => <Game {...props} 
+                    <Route path="/game" render={withRouter((props) => <Game {...props} 
                         state={this.state} 
                         socket={socket}
                         setStatusToReady={this.setStatusToReady}
-                        setTurn={this.setTurn} />)} />
+                        setTurn={this.setTurn} 
+                        setScore={this.setScore} />)} />
                 </Switch>
             </Router>
            

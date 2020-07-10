@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
+import Score from './Score';
 import { Card, CardWrapper } from 'react-swipeable-cards';
 
 class Game extends React.Component {
@@ -10,7 +11,8 @@ class Game extends React.Component {
             cards: null,
             timeleft: null,
             activeCards : null,
-            discardedCards : null
+            discardedCards : null,
+            score: null,
         }
     }
 
@@ -20,6 +22,7 @@ class Game extends React.Component {
         this.props.socket.on('allPlayersReady', this.allPlayersReady);
         this.props.socket.on('myTurn', this.setTurn);
         this.props.socket.on('timeRemaining', this.timeRemaining);
+        this.props.socket.on('retrieveScore', this.retrieveScore);
     }
 
     cardData = (data) => {
@@ -68,6 +71,17 @@ class Game extends React.Component {
         }
     } 
 
+    retrieveScore = (score) => {
+        this.setState({ score : score })
+    }
+
+    addToScore(index) {
+        let data = {
+            gameId: this.props.state.gameId,
+        }
+        this.props.socket.emit('addToScore', data);
+    }
+
 
     renderCards = () => {
         let cards = this.state.cards;
@@ -91,6 +105,7 @@ class Game extends React.Component {
               key={cards[d]._id}
               onSwipe={this.onSwipe.bind(this)}
               onSwipeLeft={this.discardCard.bind(this, d)}
+              onSwipeRight={this.addToScore.bind(this, d)}
               data={cards[d]}>
                 {cards[d].card}
             </Card>
@@ -114,6 +129,10 @@ class Game extends React.Component {
                 <CardWrapper>
                     {this.state.cards && this.renderCards()}
                 </CardWrapper>
+                <Score
+                  score={this.state.score}
+                >
+                </Score>
                 <p>{this.state.timeleft}</p>
             </div> 
         )
