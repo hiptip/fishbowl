@@ -60,7 +60,7 @@ async function hostCreateNewGame() {
     let roomId = await getNextRoom();
 
     // Create a game with the room
-    let gameInit = await models.Game.create({roomId: roomId, startTime: new Date(), discardedCards: [], playersReady: 0, teamAIndex: 0, teamBIndex: 0, teamTurn: "A", score: 0, round: 1});
+    let gameInit = await models.Game.create({roomId: roomId, startTime: new Date(), discardedCards: [], playersReady: 0, teamAIndex: 0, teamBIndex: 0, teamTurn: "A", teamAscore: 0, teamBscore: 0, round: 1});
 
     // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
     this.emit('newGameCreated', {gameId: roomId, gameMongoId: gameInit._id, mySocketId: this.id});
@@ -277,7 +277,6 @@ async function choosePresenter(data) {
     switch (teamTurn) {
         case "A": 
             var player = game.teamA[game.teamAIndex % game.teamA.length];
-            console.log("should be doin something here");
             io.to(player.socketID).emit('myTurn', true);
             game.teamAIndex += 1;
             game.teamTurn = "B";
@@ -295,8 +294,18 @@ async function choosePresenter(data) {
 async function addToScore(data) {
     var room = gameSocket.adapter.rooms[data.gameId];
     let game = await models.Game.findOne({_id: room.state.mongoId});
-    game.score += 1;
-    io.sockets.in(data.gameId).emit('retrieveScore', game.score);
+    var teamTurn = game.teamTurn;
+    switch (teamTurn) {
+        case "A": 
+            game.teamBscore += 1;
+        case "B":
+            game.teamAscore += 1;
+    }
+    let scores = {
+        teamAscore : game.teamAscore,
+        teamBscore : game.teamBscore
+    }
+    io.sockets.in(data.gameId).emit('retrieveScore', scores);
     return game.save();
 }
 

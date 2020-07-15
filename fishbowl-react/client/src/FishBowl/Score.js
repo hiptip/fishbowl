@@ -9,7 +9,8 @@ class Score extends React.Component {
     render() {
         return (
             <div>
-                {this.props.score}
+                Team A Score: {this.props.teamAscore}
+                Team B Score: {this.props.teamBscore}
             </div>
         )
     }

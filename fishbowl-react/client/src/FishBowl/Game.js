@@ -3,6 +3,27 @@ import { withRouter } from 'react-router-dom';
 import Score from './Score';
 import { Card, CardWrapper } from 'react-swipeable-cards';
 
+
+
+// Create custom end card
+class MyEndCard extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    // refreshStack = () => {
+    //     this.props.set
+    // }
+
+    render() {
+      return(
+        <div>
+            YS
+            {/* <button onClick={this.refreshStack}></button> */}
+        </div> 
+      );
+    }
+  }
 class Game extends React.Component {
     constructor(props) {
         super(props);
@@ -12,7 +33,8 @@ class Game extends React.Component {
             timeleft: null,
             activeCards : null,
             discardedCards : null,
-            score: null,
+            teamAscore : null,
+            teamBscore : null,
         }
     }
 
@@ -51,7 +73,6 @@ class Game extends React.Component {
     }
 
     setTurn = (bool) => {
-        console.log("here???");
         this.props.setTurn(bool);
     }
 
@@ -71,8 +92,14 @@ class Game extends React.Component {
         }
     } 
 
-    retrieveScore = (score) => {
-        this.setState({ score : score })
+    retrieveScore = (scores) => {
+        console.log(scores);
+        var teamAscore = scores.teamAscore;
+        var teamBscore = scores.teamBscore;
+        this.setState({ 
+            teamAscore : teamAscore,
+            teamBscore : teamBscore
+        })
     }
 
     addToScore(index) {
@@ -81,7 +108,13 @@ class Game extends React.Component {
         }
         this.props.socket.emit('addToScore', data);
     }
-
+    
+    getEndCard() {
+        //refresh stack
+        return(
+          <MyEndCard/>
+        );
+      }
 
     renderCards = () => {
         let cards = this.state.cards;
@@ -126,11 +159,12 @@ class Game extends React.Component {
         }
         return (
             <div>
-                <CardWrapper>
+                <CardWrapper addEndCard={this.getEndCard.bind(this)}>
                     {this.state.cards && this.renderCards()}
                 </CardWrapper>
                 <Score
-                  score={this.state.score}
+                  teamAscore={this.state.teamAscore}
+                  teamBscore={this.state.teamBscore}
                 >
                 </Score>
                 <p>{this.state.timeleft}</p>

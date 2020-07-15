@@ -61,7 +61,9 @@ const  GameScheam  =  new Schema(
 
     teamBIndex: Number,
 
-    score: Number,
+    teamAscore: Number,
+
+    teamBscore: Number,
 
     round: Number,
 

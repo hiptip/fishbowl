@@ -34,7 +34,7 @@ server.on('listening', onListening);
 var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function (socket) {
-  console.log('client connected');
+  console.log('client connected ' + socket.id);
   fish.initGame(io, socket);
 });
 

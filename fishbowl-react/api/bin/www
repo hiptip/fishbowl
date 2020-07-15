@@ -1,125 +1,125 @@
-#!/usr/bin/env node
+// #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
+// /**
+//  * Module dependencies.
+//  */
 
-var app = require('../app');
-var debug = require('debug')('api:server');
-var http = require('http');
-var fish = require('../fishbowl');
+// var app = require('../app');
+// var debug = require('debug')('api:server');
+// var http = require('http');
+// var fish = require('../fishbowl');
 
 
-/**
- * Get port from environment and store in Express.
- */
+// /**
+//  * Get port from environment and store in Express.
+//  */
 
-var port = normalizePort(process.env.PORT || '9000');
-app.set('port', port);
+// var port = normalizePort(process.env.PORT || '9000');
+// app.set('port', port);
 
-/**
- * Create HTTP server.
- */
+// /**
+//  * Create HTTP server.
+//  */
 
-var server = http.createServer(app);
+// var server = http.createServer(app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+// /**
+//  * Listen on provided port, on all network interfaces.
+//  */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+// server.listen(port);
+// server.on('error', onError);
+// server.on('listening', onListening);
 
-//instantiate socket 
-var io = require('socket.io').listen(server);
-
-io.sockets.on('connection', function (socket) {
-  console.log('client connected');
-  fish.initGame(io, socket);
-});
-
-// var countdown = 1000;
-// setInterval(function() {
-//   countdown--;
-//   io.sockets.emit('timer', { countdown: countdown });
-// }, 1000);
+// //instantiate socket 
+// var io = require('socket.io').listen(server);
 
 // io.sockets.on('connection', function (socket) {
-//   socket.on('reset', function (data) {
-//     countdown = 1000;
-//     io.sockets.emit('timer', { countdown: countdown });
-//   });
+//   console.log('client connected');
+//   fish.initGame(io, socket);
 // });
 
+// // var countdown = 1000;
+// // setInterval(function() {
+// //   countdown--;
+// //   io.sockets.emit('timer', { countdown: countdown });
+// // }, 1000);
 
-// io.on("connection", (client) => {
-//   client.on('subscribeToTimer', (interval) => {
-//     console.log('client is subscribing to timer with interval ', interval);
-//     setInterval(() => {
-//       client.emit('timer', new Date());
-//     }, interval);
-//   });
-// });
+// // io.sockets.on('connection', function (socket) {
+// //   socket.on('reset', function (data) {
+// //     countdown = 1000;
+// //     io.sockets.emit('timer', { countdown: countdown });
+// //   });
+// // });
 
-console.log('listening on port ', port);
 
-/**
- * Normalize a port into a number, string, or false.
- */
+// // io.on("connection", (client) => {
+// //   client.on('subscribeToTimer', (interval) => {
+// //     console.log('client is subscribing to timer with interval ', interval);
+// //     setInterval(() => {
+// //       client.emit('timer', new Date());
+// //     }, interval);
+// //   });
+// // });
 
-function normalizePort(val) {
-  var port = parseInt(val, 10);
+// console.log('listening on port ', port);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+// /**
+//  * Normalize a port into a number, string, or false.
+//  */
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+// function normalizePort(val) {
+//   var port = parseInt(val, 10);
 
-  return false;
-}
+//   if (isNaN(port)) {
+//     // named pipe
+//     return val;
+//   }
 
-/**
- * Event listener for HTTP server "error" event.
- */
+//   if (port >= 0) {
+//     // port number
+//     return port;
+//   }
 
-function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+//   return false;
+// }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+// /**
+//  * Event listener for HTTP server "error" event.
+//  */
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-}
+// function onError(error) {
+//   if (error.syscall !== 'listen') {
+//     throw error;
+//   }
 
-/**
- * Event listener for HTTP server "listening" event.
- */
+//   var bind = typeof port === 'string'
+//     ? 'Pipe ' + port
+//     : 'Port ' + port;
 
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-}
+//   // handle specific listen errors with friendly messages
+//   switch (error.code) {
+//     case 'EACCES':
+//       console.error(bind + ' requires elevated privileges');
+//       process.exit(1);
+//       break;
+//     case 'EADDRINUSE':
+//       console.error(bind + ' is already in use');
+//       process.exit(1);
+//       break;
+//     default:
+//       throw error;
+//   }
+// }
+
+// /**
+//  * Event listener for HTTP server "listening" event.
+//  */
+
+// function onListening() {
+//   var addr = server.address();
+//   var bind = typeof addr === 'string'
+//     ? 'pipe ' + addr
+//     : 'port ' + addr.port;
+//   debug('Listening on ' + bind);
+// }
