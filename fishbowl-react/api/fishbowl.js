@@ -201,7 +201,11 @@ async function retrieveCards(data) {
 
     update.save();
     // console.log("Cards: ", update);
-
+    let scores = {
+        teamAscore : game.teamAscore,
+        teamBscore : game.teamBscore
+    }
+    io.sockets.in(data).emit('retrieveScore', scores);
     io.sockets.in(data).emit('cardData', cardData);
 }
 

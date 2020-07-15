@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Score from './Score';
+import WaitingPage from './WaitingPage';
 import { Card, CardWrapper } from 'react-swipeable-cards';
 
 
@@ -35,6 +36,10 @@ class Game extends React.Component {
             discardedCards : null,
             teamAscore : null,
             teamBscore : null,
+            scores : {
+                teamAscore : null,
+                teamBscore : null
+            }
         }
     }
 
@@ -96,9 +101,11 @@ class Game extends React.Component {
         console.log(scores);
         var teamAscore = scores.teamAscore;
         var teamBscore = scores.teamBscore;
-        this.setState({ 
-            teamAscore : teamAscore,
-            teamBscore : teamBscore
+        this.setState({
+            scores : {
+                teamAscore : teamAscore,
+                teamBscore : teamBscore
+            }
         })
     }
 
@@ -154,7 +161,10 @@ class Game extends React.Component {
         } else if (!this.props.state.myTurn) {
             //its my turn
             return (
-                <div>itss someseonwe gelsesasg aturn</div>
+                <WaitingPage
+                  scores={this.state.scores}>
+                    
+                </WaitingPage>
             )
         }
         return (
@@ -163,8 +173,8 @@ class Game extends React.Component {
                     {this.state.cards && this.renderCards()}
                 </CardWrapper>
                 <Score
-                  teamAscore={this.state.teamAscore}
-                  teamBscore={this.state.teamBscore}
+                  teamAscore={this.state.scores.teamAscore}
+                  teamBscore={this.state.scores.teamBscore}
                 >
                 </Score>
                 <p>{this.state.timeleft}</p>
