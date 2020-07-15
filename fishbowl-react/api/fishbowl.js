@@ -295,11 +295,14 @@ async function addToScore(data) {
     var room = gameSocket.adapter.rooms[data.gameId];
     let game = await models.Game.findOne({_id: room.state.mongoId});
     var teamTurn = game.teamTurn;
+    console.log(teamTurn)
     switch (teamTurn) {
         case "A": 
             game.teamBscore += 1;
+            break;
         case "B":
             game.teamAscore += 1;
+            break;
     }
     let scores = {
         teamAscore : game.teamAscore,
