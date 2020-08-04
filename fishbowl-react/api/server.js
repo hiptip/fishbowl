@@ -33,8 +33,11 @@ server.on('listening', onListening);
 //instantiate socket 
 var io = require('socket.io').listen(server);
 
+var count = 0;
+
 io.sockets.on('connection', function (socket) {
-  console.log('client connected ' + socket.id);
+  console.log('client connected ' + socket.id + " with count: " + count);
+  count++;
   fish.initGame(io, socket);
 });
 
